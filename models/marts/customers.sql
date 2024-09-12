@@ -1,3 +1,11 @@
+{{ config(
+    materialized='incremental',
+    unique_key='customer_id',
+    pre_hook=[
+        "DELETE FROM {{ this }}"
+    ]
+) }}
+
 with
 
 customers as (

@@ -3,6 +3,10 @@ packages:
     version: 1.1.1
   - package: calogica/dbt_date
     version: 0.10.0
-  - package: dbt-labs/audit_helper
-    version: 0.12.0
-sha1_hash: 974021e878d1894c35a21fb44fb0b6bd04f07078
+  - git: https://github.com/dbt-labs/dbt-audit-helper.git
+    revision: c0be07f84e61dd01517292a15a2c084af9c95f01
+  - package: Snowflake-Labs/dbt_constraints
+    version: 1.0.3
+  - package: dbt-labs/dbt_project_evaluator
+    version: 0.14.1
+sha1_hash: 8ae1933b31b7dd17e156ab441d6e0a301820bd05
