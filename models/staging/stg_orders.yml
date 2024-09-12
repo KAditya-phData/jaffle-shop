@@ -10,3 +10,16 @@ models:
         data_tests:
           - not_null
           - unique
+          - dbt_constraints.foreign_key:
+              fk_column_name: customer_id
+              pk_table_name: ref('stg_customers')
+              pk_column_name: customer_id
+      - name: customer_id
+        description: The foreign key customer_id linking to the customer table.
+        data_tests:
+          - not_null
+          - dbt_constraints.foreign_key:
+              fk_column_name: customer_id
+              pk_table_name: ref('stg_customers')
+              pk_column_name: customer_id
+
