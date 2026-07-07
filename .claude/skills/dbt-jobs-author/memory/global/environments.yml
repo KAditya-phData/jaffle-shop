@@ -1,0 +1,10 @@
+environments:
+  acme:
+    prod:
+      project_id: 176941
+      environment_id: 134459
+      target: prod
+    staging:
+      project_id: 176941
+      environment_id: 134460
+      target: staging

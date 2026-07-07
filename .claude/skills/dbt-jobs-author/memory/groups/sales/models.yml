@@ -1,0 +1,18 @@
+dashboards:
+  executive_sales:
+    description: "Executive Sales dashboard (leadership)"
+    primary_models:
+      - marts.sales_exec_summary
+      - marts.sales_kpi
+    exposures:
+      - exec_sales_dashboard
+phrases:
+  - phrase: "executive sales"
+    models:
+      - marts.sales_exec_summary
+  - phrase: "pipeline health"
+    models:
+      - marts.sales_pipeline
+  - phrase: "sales kpi"
+    models:
+      - marts.sales_kpi

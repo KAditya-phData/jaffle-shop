@@ -1,0 +1,6 @@
+# Env-specific Jinja vars for dbt-jobs-as-code (rendered via --vars-yml).
+account_id: 43791
+project_id: 176941
+environment_id: 134459
+env_type: prod
+target_name: prod

@@ -1,0 +1,52 @@
+# Escalation policy template for dbt-jobs-author
+#
+# Copy this file to <project>/.claude/escalation_policy.yml and fill in the
+# values for your project. This file is committed to the project repo so the
+# whole team shares the same escalation contacts.
+#
+# The skill reads this file when a business-persona step fails after 3 attempts,
+# or when a dashboard->table mapping is missing from models.yml.
+
+contacts:
+  # Primary escalation: data analysts own the dashboard->table mappings.
+  # When a business user requests a job for a dashboard whose table mapping is
+  # unknown, the skill tells the user to escalate here so the analyst can add
+  # the mapping to memory/groups/<group>/models.yml.
+  data_analysts:
+    - name: "Data Analytics Team"
+      email: "data-analytics@example.com"
+      slack_channel: "#data-analytics"   # optional
+
+  # On-call contact for runtime failures (e.g. dry-run errors after 3 retries).
+  on_call:
+    - name: "Data Engineering On-Call"
+      email: "data-eng-oncall@example.com"
+      slack_channel: "#data-eng-alerts"  # optional
+      pagerduty_service: ""              # optional; leave blank if not used
+
+channels:
+  # Preferred channel for escalation messages. "slack" or "email".
+  default: slack
+
+rules:
+  # Escalate to data_analysts when:
+  # 1. A business user requests a job for a dashboard whose table mapping is
+  #    missing from models.yml (resolve_selection returns status: escalate).
+  # Action: ask the analyst to add dashboard<->table mapping to models.yml,
+  #         then retry the job-authoring request.
+  - trigger: dashboard_mapping_missing
+    escalate_to: data_analysts
+    message: >
+      A business user requested a job for a dashboard but no dashboard->table
+      mapping was found in models.yml. Please add the mapping and notify the
+      user so they can retry.
+
+  # Escalate to on_call when:
+  # 2. Any pipeline step (dry-run, connection check, verify, etc.) fails after
+  #    3 retry attempts for a business-persona user.
+  # Action: on-call investigates the dbt error and unblocks the user.
+  - trigger: step_failed_after_3_retries
+    escalate_to: on_call
+    message: >
+      A dbt job-authoring step failed after 3 attempts for a business user.
+      See the error_interpreter output for the category and suggested follow-up.

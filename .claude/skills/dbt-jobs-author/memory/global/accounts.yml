@@ -1,0 +1,4 @@
+accounts:
+  acme:
+    account_id: 43791
+    dbt_cloud_url: "https://cloud.getdbt.com"

@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/dbt-labs/dbt-jobs-as-code/main/src/dbt_jobs_as_code/schemas/load_job_schema.json
+jobs:
+  phdata_pipeline_nightly:
+    account_id: 17878
+    project_id: 555006
+    environment_id: 462122
+    name: "phdata_pipeline_nightly [[phdata_pipeline_nightly]]"
+    description: "Nightly dbt build for all models tagged tag:pipeline_for_phdata"
+    job_type: scheduled
+    settings:
+      target_name: prod
+      threads: 4
+    execution:
+      timeout_seconds: 0
+    run_generate_sources: false
+    execute_steps:
+      - dbt build --select tag:pipeline_for_phdata --warn-error-options '{"error":["NoNodesForSelectionCriteria"]}'
+    generate_docs: false
+    triggers:
+      github_webhook: false
+      git_provider_webhook: false
+      schedule: true
+      on_merge: false
+    schedule:
+      cron: "0 0 * * *"
+    identifier: phdata_pipeline_nightly
+    cost_optimization_features:
+      - state_aware_orchestration

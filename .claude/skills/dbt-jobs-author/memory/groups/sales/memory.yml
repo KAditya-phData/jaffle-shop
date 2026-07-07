@@ -1,0 +1,12 @@
+business_group: sales
+account: acme
+default_environment: prod
+default_target_name: "prod"
+default_schedule_cron: "0 10 * * 1-5"
+notification_defaults:
+  slack_channels:
+    - "#sales-data-alerts"
+  emails:
+    - "sales-analytics@acme.com"
+last_used_job_identifiers:
+  - "exec_sales_weekday"

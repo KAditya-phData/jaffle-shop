@@ -1,0 +1,6 @@
+naming:
+  job_name_pattern: "{group}-{purpose}-{frequency}"
+  identifier_pattern: "{group}_{purpose}_{env}"
+  notes: >
+    Job names are human-readable; the identifier (appended as [[identifier]])
+    is the stable key that distinguishes managed jobs from UI-created ones.
