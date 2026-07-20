@@ -1,6 +1,6 @@
 # One-time setup
 
-Run these steps once per machine/project before authoring any jobs. All outputs are cached in `memory/global/setup_cache.yml` (token never stored). See [flow.md](flow.md) Phase A for the programmatic sequence.
+§3.1–3.2 (install, authenticate) are manual, one-time prerequisites you set up yourself. Once done, `scripts/run_setup.py` — wired as a `PreToolUse` hook on this skill (see `.claude/settings.json`) — automatically re-runs the prereq check, resolves dbt Cloud environments (§3.5), and checks the `dbt-jobs-as-code` install before every invocation, caching outputs to `memory/global/setup_cache.yml` (token never stored). The rest of this file documents those steps and their underlying scripts for manual use/troubleshooting.
 
 ---
 
@@ -22,14 +22,13 @@ Import existing dbt Cloud jobs as the starting point (better than writing config
 dbt-jobs-as-code import --account-id <your_account_id> --output-file jobs/jobs.yml
 ```
 
-You need a dbt Cloud API token. Either:
-- Reuse a `token-value` from `~/.dbt/dbt_cloud.yml` (from the dbt Cloud CLI setup) for the right account, **or**
-- Generate a dedicated service token (Account Settings → Service Tokens; needs **Job Admin** permission).
+You need a dbt Cloud API token, exposed as `DBT_API_KEY` and `DBT_BASE_URL` — the exact env var names `dbt-jobs-as-code` itself reads. `scripts/load_dbt_credentials.py` (chained into `scripts/run_setup.py`, which runs automatically via the `PreToolUse` hook) resolves both from `~/.dbt/dbt_cloud.yml`'s `token-value`/`account-host` for the active project and exports them — no manual step needed in the common case. It never writes the key into any file under this skill.
 
-Set it as an environment variable — do not hardcode:
+To set them yourself instead (e.g. a dedicated service token — Account Settings → Service Tokens; needs **Job Admin** permission — instead of the CLI-config token):
 
 ```bash
-export DBT_API_TOKEN=<token>
+export DBT_API_KEY=<token>
+export DBT_BASE_URL=https://<account-host>
 ```
 
 ---
@@ -62,12 +61,15 @@ Example step:
 - name: Sync dbt jobs
   run: dbt-jobs-as-code sync --config jobs/jobs.yml
   env:
-    DBT_API_TOKEN: ${{ secrets.DBT_API_TOKEN }}
+    DBT_API_KEY: ${{ secrets.DBT_API_KEY }}
+    DBT_BASE_URL: ${{ secrets.DBT_BASE_URL }}
 ```
 
 ---
 
 ## §3.5 Environment resolution
+
+Runs automatically via the `PreToolUse` hook (`scripts/run_setup.py`) before every dbt-jobs-author invocation. Manual usage below, for troubleshooting.
 
 The Python script `scripts/dbt_cloud_env.py` is the primary tool. It reads `~/.dbt/dbt_cloud.yml`, resolves the active project's account/host/token, and lists environments via the dbt Cloud API:
 

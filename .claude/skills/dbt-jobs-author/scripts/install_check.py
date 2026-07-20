@@ -38,7 +38,7 @@ def build_message(installed: bool, persona: str) -> str:
         "reference/setup.md:\n"
         "  1. pip install dbt-jobs-as-code\n"
         "  2. dbt-jobs-as-code import --account-id <id> --output-file jobs/jobs.yml\n"
-        "  3. export DBT_API_TOKEN=<token>  (see §3.2 for token options)"
+        "  3. export DBT_API_KEY=<token>  (see §3.2 for token options)"
     )
 
 

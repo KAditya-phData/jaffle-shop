@@ -2,7 +2,7 @@
 
 Usage:
     python connection_check.py --account-id N --project-id N --environment-id N
-                               [--token-env DBT_API_TOKEN] [--max-age-hours 24] [--force]
+                               [--token-env DBT_API_KEY] [--max-age-hours 24] [--force]
 
 Output (stdout, JSON):
     {"ok": true, "created_and_deleted": true, "job_id": N}
@@ -15,7 +15,7 @@ environment within --max-age-hours skip the live API round-trip. Pass
 --force to bypass the cache.
 
 # ponytail: real path is dbt Cloud Admin API v2 jobs create+delete; falls back to
-# {"status":"skipped"} when DBT_API_TOKEN is absent so the orchestrator can proceed
+# {"status":"skipped"} when DBT_API_KEY is absent so the orchestrator can proceed
 # gracefully in offline/CI environments. Upgrade path: swap the urllib calls below for
 # the dbt-jobs-as-code SDK if it gains a programmatic create/delete API.
 """
@@ -118,7 +118,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--account-id", type=int, required=True)
     ap.add_argument("--project-id", type=int, required=True)
     ap.add_argument("--environment-id", type=int, required=True)
-    ap.add_argument("--token-env", default="DBT_API_TOKEN", help="Env var name holding the API token")
+    ap.add_argument("--token-env", default="DBT_API_KEY", help="Env var name holding the API token")
     ap.add_argument("--host", default="cloud.getdbt.com", help="dbt Cloud hostname")
     ap.add_argument("--max-age-hours", type=float, default=24, help="Skip live check if a prior success is younger than this")
     ap.add_argument("--force", action="store_true", help="Bypass the cache and run the live check")

@@ -1,7 +1,7 @@
 ---
 name: dbt-jobs-author
 description: Turn a natural-language request into a validated dbt Cloud job defined with dbt-jobs-as-code. Use when someone describes a recurring dbt workflow or dashboard refresh and wants it created/updated as a scheduled job, for both business users and dbt engineers. Detects persona, asks persona-appropriate questions, verifies the dbt connection, resolves the selection, dry-runs with safety flags, then persists the job to <project>/jobs/jobs.yml.
-allowed-tools: Read, Write, Bash
+allowed-tools: Read, Write, Bash, Glob, Grep, AskUserQuestion, EnterPlanMode, ExitPlanMode, Edit, EnterWorktree
 model: inherit
 ---
 
@@ -16,22 +16,7 @@ See [reference/flow.md](reference/flow.md) for the full programmatic pipeline an
 
 ---
 
-## One-time setup (§2.1)
-
-Run once per machine/project before authoring any job. Details in [reference/setup.md](reference/setup.md).
-
-1. **Prereq check** — run `scripts/env_check.sh` (Linux/Mac) or `scripts/env_check.ps1` (Windows).
-   Stops immediately if `dbt` or `python` is missing.
-2. **Resolve dbt Cloud environments** — `python scripts/dbt_cloud_env.py` reads `~/.dbt/dbt_cloud.yml`
-   and lists available environments. Result is cached in `memory/global/setup_cache.yml`.
-3. **Install check** — `python scripts/install_check.py --persona <persona>` confirms
-   `dbt-jobs-as-code` is available. Business persona gets a recommendation; engineer gets install steps.
-4. Cache the resolved account, project, host, env list, and tool versions in `memory/global/setup_cache.yml`
-   (token is never stored).
-
----
-
-## Per-job pipeline (§2.2)
+## Per-job pipeline (§2.1)
 
 Follow [reference/flow.md](reference/flow.md) step by step.
 
@@ -85,6 +70,7 @@ Follow [reference/flow.md](reference/flow.md) step by step.
 | `scripts/env_guard.py` | Block PROD writes; allow DEV/STG/QA only |
 | `scripts/connection_check.py` | Create + delete throwaway test job to verify dbt Cloud permissions |
 | `scripts/dbt_cloud_env.py` | List dbt Cloud environments from `~/.dbt/dbt_cloud.yml` |
+| `scripts/load_dbt_credentials.py` | Export `DBT_API_KEY`/`DBT_BASE_URL` from `~/.dbt/dbt_cloud.yml` into the OS environment (never into a skill file) |
 | `scripts/install_check.py` | Check `dbt-jobs-as-code` availability; persona-appropriate guidance |
 | `scripts/env_check.sh` | Prereq check (Linux/Mac): dbt, python present? |
 | `scripts/env_check.ps1` | Prereq check (Windows): dbt, python present? |

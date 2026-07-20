@@ -26,3 +26,29 @@ jobs:
       cron: 0 6 * * 0
     cost_optimization_features:
     - state_aware_orchestration
+  phdata_orders_rupees_daily:
+    account_id: 17878
+    project_id: 555006
+    environment_id: 462450
+    name: phdata_orders_rupees_daily [[phdata_orders_rupees_daily]]
+    job_type: scheduled
+    settings:
+      target_name: staging
+      threads: 4
+    execution:
+      timeout_seconds: 0
+    run_generate_sources: false
+    execute_steps:
+    - dbt build --select +orders_rupees --warn-error-options '{"error":["NoNodesForSelectionCriteria"]}'
+    generate_docs: false
+    triggers:
+      github_webhook: false
+      git_provider_webhook: false
+      schedule: true
+      on_merge: false
+    description: Daily build of orders_rupees and all upstream models
+    identifier: phdata_orders_rupees_daily
+    schedule:
+      cron: 0 14 * * *
+    cost_optimization_features:
+    - state_aware_orchestration

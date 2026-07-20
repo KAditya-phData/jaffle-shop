@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .claude/skills/dbt-jobs-author/scripts/run_setup.py || exit 2",
+            "if": "Skill(dbt-jobs-author)",
+            "statusMessage": "Running dbt-jobs-author one-time setup check..."
+          }
+        ]
+      }
+    ]
+  }
+}
