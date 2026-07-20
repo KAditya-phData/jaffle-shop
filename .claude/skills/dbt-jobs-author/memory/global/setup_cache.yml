@@ -1,7 +1,7 @@
 connection_checks:
   17878:555006:462450:
     ok: true
-    verified_at: '2026-07-07T07:25:45.668609+00:00'
+    verified_at: '2026-07-20T07:36:34.236742+00:00'
 tool_versions:
   python: 3.12.10
   dbt: dbt Cloud CLI - 0.40.18 (aa58f643af1725e279e559883b75cf9e26596d51 2026-06-18T20:34:06Z)
