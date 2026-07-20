@@ -1,4 +1,10 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(python .claude/skills/dbt-jobs-author/scripts/*)",
+      "Bash(python3 .claude/skills/dbt-jobs-author/scripts/*)"
+    ]
+  },
   "hooks": {
     "PreToolUse": [
       {

@@ -22,8 +22,13 @@ from typing import Any
 
 # same-dir imports for the mock path
 sys.path.insert(0, str(Path(__file__).parent))
+from venv_bin import find_executable  # noqa: E402
 
 WARN_ERROR_OPT = '{"error":["NoNodesForSelectionCriteria"]}'
+
+# dbt / dbt-jobs-as-code can emit unicode (emoji, box-drawing) that crashes under
+# Windows' default cp1252 console codepage — decode subprocess output as UTF-8 always.
+_SUBPROCESS_TEXT_KW = {"encoding": "utf-8", "errors": "replace"}
 
 
 # ---------------------------------------------------------------------------
@@ -47,8 +52,8 @@ def _stage1(spec: dict[str, Any], project_dir: Path) -> dict[str, Any]:
             cmd,
             cwd=str(project_dir),
             capture_output=True,
-            text=True,
             timeout=120,
+            **_SUBPROCESS_TEXT_KW,
         )
     except FileNotFoundError:
         return {
@@ -87,10 +92,20 @@ def _stage2(project_dir: Path) -> dict[str, Any]:
             "messages": [f"jobs.yml not found at {jobs_yml}"],
         }
 
-    cmd = ["dbt-jobs-as-code", "plan", str(jobs_yml)]
+    exe = find_executable("dbt-jobs-as-code", search_from=project_dir)
+    if not exe:
+        return {
+            "ok": False, "stage": 2,
+            "error_category": "connection_error",
+            "messages": ["dbt-jobs-as-code not found — install it or set DRY_RUN_MODE=mock"],
+        }
+
+    cmd = [exe, "plan", str(jobs_yml)]
+    env = {**os.environ, "PYTHONUTF8": "1"}
     try:
         result = subprocess.run(
-            cmd, capture_output=True, text=True, timeout=60,
+            cmd, capture_output=True, timeout=60, env=env,
+            **_SUBPROCESS_TEXT_KW,
         )
     except FileNotFoundError:
         return {

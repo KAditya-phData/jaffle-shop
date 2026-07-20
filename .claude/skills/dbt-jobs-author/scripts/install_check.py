@@ -10,12 +10,15 @@ from __future__ import annotations
 
 import argparse
 import json
-import shutil
 import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent))
+from venv_bin import find_executable  # noqa: E402
 
 
 def check_installed() -> bool:
-    if shutil.which("dbt-jobs-as-code"):
+    if find_executable("dbt-jobs-as-code"):
         return True
     try:
         import dbt_jobs_as_code  # noqa: F401  type: ignore
