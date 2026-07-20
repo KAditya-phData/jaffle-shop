@@ -3,7 +3,7 @@ connection_checks:
     ok: true
     verified_at: '2026-07-07T07:25:45.668609+00:00'
 tool_versions:
-  python: 3.12.6
+  python: 3.12.10
   dbt: dbt Cloud CLI - 0.40.18 (aa58f643af1725e279e559883b75cf9e26596d51 2026-06-18T20:34:06Z)
 dbt_jobs_as_code_installed: true
 account_id: '17878'
