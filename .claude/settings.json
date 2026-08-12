@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(python .claude/skills/dbt-jobs-author/scripts/*)",
-      "Bash(python3 .claude/skills/dbt-jobs-author/scripts/*)"
+      "Bash(python3 .claude/skills/dbt-jobs-author/scripts/*)",
+      "Bash(DRY_RUN_MODE=mock python .claude/skills/dbt-jobs-author/scripts/*)",
+      "Bash(DRY_RUN_MODE=mock python3 .claude/skills/dbt-jobs-author/scripts/*)",
+      "Bash(PYTHONUTF8=1 python .claude/skills/dbt-jobs-author/scripts/*)",
+      "Bash(PYTHONUTF8=1 python3 .claude/skills/dbt-jobs-author/scripts/*)"
     ]
   },
   "hooks": {
