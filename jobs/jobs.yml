@@ -103,3 +103,33 @@ jobs:
     identifier: on_merge_deploy
     cost_optimization_features:
     - state_aware_orchestration
+  pr_validation_testing_stg:
+    account_id: 17878
+    project_id: 555006
+    environment_id: 462450
+    name: PR Validation & Testing - Staging [[pr_validation_testing_stg]]
+    job_type: ci
+    settings:
+      target_name: ci_pr_target
+      threads: 8
+    execution:
+      timeout_seconds: 3600
+    run_generate_sources: true
+    execute_steps:
+    - dbt build --select state:modified+ --warn-error-options '{"error":["NoNodesForSelectionCriteria"]}'
+    generate_docs: true
+    triggers:
+      github_webhook: false
+      git_provider_webhook: true
+      schedule: false
+      on_merge: false
+    description: Automated CI pipeline triggered by pull requests to lint, build, and test modified models against the staging environment using state deferral.
+    identifier: pr_validation_testing_stg
+    deferring_environment_id: 462450
+    triggers_on_draft_pr: true
+    run_lint: true
+    errors_on_lint_failure: true
+    run_compare_changes: true
+    compare_changes_flags: --select state:modified
+    cost_optimization_features:
+    - state_aware_orchestration
