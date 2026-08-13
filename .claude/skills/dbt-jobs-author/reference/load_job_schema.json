@@ -75,6 +75,12 @@
           }
         },
         "triggers_on_draft_pr": {"type": "boolean"},
+        "dbt_version": {"type": ["string", "null"]},
+        "deferring_environment_id": {"type": ["integer", "string", "null"]},
+        "run_lint": {"type": ["boolean", "null"]},
+        "errors_on_lint_failure": {"type": ["boolean", "null"]},
+        "run_compare_changes": {"type": "boolean"},
+        "compare_changes_flags": {"type": "string"},
         "cost_optimization_features": {
           "type": "array",
           "items": {"type": "string", "enum": ["state_aware_orchestration", "efficient_testing"]}

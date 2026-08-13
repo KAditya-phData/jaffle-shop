@@ -106,6 +106,20 @@ def job_spec_to_config(spec: dict[str, Any], dry_run: bool) -> dict[str, Any]:
         job["description"] = spec["description"]
     if spec.get("identifier"):
         job["identifier"] = spec["identifier"]
+    if spec.get("dbt_version"):
+        job["dbt_version"] = spec["dbt_version"]
+    if spec.get("deferring_environment_id") is not None:
+        job["deferring_environment_id"] = int(spec["deferring_environment_id"])
+    if spec.get("triggers_on_draft_pr") is not None:
+        job["triggers_on_draft_pr"] = bool(spec["triggers_on_draft_pr"])
+    if spec.get("run_lint") is not None:
+        job["run_lint"] = bool(spec["run_lint"])
+    if spec.get("errors_on_lint_failure") is not None:
+        job["errors_on_lint_failure"] = bool(spec["errors_on_lint_failure"])
+    if spec.get("run_compare_changes") is not None:
+        job["run_compare_changes"] = bool(spec["run_compare_changes"])
+    if spec.get("compare_changes_flags"):
+        job["compare_changes_flags"] = spec["compare_changes_flags"]
 
     # schedule is required unless job_type is ci/merge
     if job_type not in ("ci", "merge"):
